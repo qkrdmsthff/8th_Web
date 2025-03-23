@@ -75,7 +75,7 @@ chapter 00 - CSS
 
 - 고구마 상자 옮기기 예제
 - 코드를 첨부해주세요 🍠
-    
+    ```html
     <!DOCTYPE html>
     <html lang="en">
     
@@ -103,6 +103,7 @@ chapter 00 - CSS
     </body>
     
     </html>
+    ```
 
 ![스크린샷 2025-03-18 오후 10.58.34.png](attachment:d3368038-71e5-467e-9b9c-f342dc6cf95b:스크린샷_2025-03-18_오후_10.58.34.png)
 
@@ -111,6 +112,7 @@ chapter 00 - CSS
     ![스크린샷 2024-07-18 오후 7.13.52.png](attachment:5a810066-8c42-4e8a-a2ac-fe8757085432:%E1%84%89%E1%85%B3%E1%84%8F%E1%85%B3%E1%84%85%E1%85%B5%E1%86%AB%E1%84%89%E1%85%A3%E1%86%BA_2024-07-18_%E1%84%8B%E1%85%A9%E1%84%92%E1%85%AE_7.13.52.png)
     
 ### 코드는 아래에 첨부해주세요!
+```html
 <!DOCTYPE html>
 <html lang="en">
 
@@ -149,6 +151,7 @@ chapter 00 - CSS
 </body>
 
 </html>
+```
 
 ### 키워드 정리 🍠
 
@@ -199,6 +202,7 @@ chapter 00 - CSS
     3. auto : 브라우저 및 요소의 크기에 따라 적절하게 자동 조절
 
     실습 예제) HTML 코드
+    ```html
     <!DOCTYPE html>
     <html lang="en">
     <head>
@@ -213,8 +217,10 @@ chapter 00 - CSS
     </div>
     </body>
     </html>
+    ``````
 
     실습 예제) CSS 코드
+    ```css
     
     @charset "uft-8";
 
@@ -231,6 +237,7 @@ chapter 00 - CSS
         background-color :aquamarine;
         margin : 0 auto;
     }
+    ```
 
 - flex
     
@@ -242,7 +249,7 @@ chapter 00 - CSS
     2. `flex-direction : (방향);` 내부 요소들의 정렬 방향
 
     실습 예제) HTML 코드
-
+```html
     <!DOCTYPE html>
     <html lang="en">
     <head>
@@ -257,8 +264,10 @@ chapter 00 - CSS
         </div>
     </body>
     </html>
+    ```
 
     실습 예제) CSS 코드
+    ```css
 
     @charset "uft-8";
 
@@ -276,6 +285,7 @@ chapter 00 - CSS
     height : 50px;
     background-color :aqua;
 }
+```
 
 - translate
     
@@ -290,26 +300,29 @@ chapter 00 - CSS
     위와 같은 코드를 사용하여 원하는 방면으로 이동시킬 수 있습니다.
 
     실습 예제) HTML 코드
+    ```html
 
     <!DOCTYPE html>
     <html lang="en">
-<head>
+    <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel = "stylesheet" href="style.css">
     <title> chichi </title>
-</head>
-<body>
+    </head>
+    <body>
     <div class = "container"> 
     </div>
-</body>
-</html>
+    </body>
+    </html>
+    ```
 
     실습 예제) CSS 코드
+    ```css
 
     @charset "uft-8";
 
-.container {
+    .container {
     width : 50px;
     height : 50px;
     background-color :blueviolet;
@@ -317,7 +330,8 @@ chapter 00 - CSS
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
-}
+    }
+    ```
 
 - grid
     
@@ -327,22 +341,26 @@ chapter 00 - CSS
 
     실습 예제) HTML 코드
 
+    ```html
+
     <!DOCTYPE html>
-<html lang="en">
-<head>
+    <html lang="en">
+    <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel = "stylesheet" href="style.css">
     <title> chichi </title>
-</head>
-<body>
+    </head>
+    <body>
     <div class="center">
         <div class="inner"></div>
     </div>
-</body>
-</html>
+    </body>
+    </html>
+    ```
 
-    실습 예제) CSS 코드
+실습 예제) CSS 코드
+    ```css
 
     @charset "uft-8";
 
@@ -356,8 +374,9 @@ chapter 00 - CSS
     width: 50px;
     background-color: purple;
     }
+    ```
 
-    - 반응형 background 🍠
+- 반응형 background 🍠
     - background-image
         
         `background-image: url("주소");` : url 주소에 있는 이미지를 가져와 삽입할 수 있습니다.            배경 이미지의 경로와 그라디언트를 설정할 수 있습니다.
