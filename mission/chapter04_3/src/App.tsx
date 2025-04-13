@@ -1,24 +1,39 @@
-// App.tsx 또는 Routes 정의 부분
-import { BrowserRouter, Routes, Route } from "react-router-dom";
-import SignupPage from "./pages/SignupPage"; // 경로 확인 필요
-import LoginPage from "./pages/LoginPage";
-import HomePage from "./pages/HomePage";
-import HomeLayout from "./layouts/HomeLayout";
-import NotFoundPage from "./pages/NotFoundPage";
+import './App.css'
+import {createBrowserRouter, RouterProvider} from "react-router-dom";
+import HomePage from './pages/HomePage';
+import NotFoundPage from './pages/NotFoundPage';
+import LoginPage from './pages/LoginPage';
+import HomeLayout from './layouts/HomeLayout';
+import SignupPage from './pages/SignupPage';
 
-const App = () => {
+function App() {
+  const router = createBrowserRouter([
+    {
+      path : "/",
+      element : <HomeLayout />,
+      errorElement : <NotFoundPage />,
+      children : [
+        {
+          path : '',
+          element : <HomePage />,
+        },
+
+        {
+          path : 'login', 
+          element : <LoginPage />,
+        },
+
+        {
+          path : 'signup', 
+          element : <SignupPage />,
+        }
+      ],
+    }
+  ])
+
   return (
-    <BrowserRouter>
-      <Routes>
-        <Route path="/" element={<HomeLayout />}>
-          <Route index element={<HomePage />} />
-          <Route path="login" element={<LoginPage />} />
-          <Route path="signup" element={<SignupPage />} />
-          <Route path="*" element={<NotFoundPage />} />
-        </Route>
-      </Routes>
-    </BrowserRouter>
-  );
-};
+    <RouterProvider router={router} />
+  )
+}
 
-export default App;
+export default App

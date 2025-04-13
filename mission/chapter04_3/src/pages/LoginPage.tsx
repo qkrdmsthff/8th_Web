@@ -1,6 +1,9 @@
 import { useState } from "react";
 import useForm from "../hooks/useForm";
 import { UserSigninInformation, validateSignin } from "../utils/validate";
+import { postLogin } from '../apis/auth';
+import { useLocalsStorage } from "../hooks/useLocalsStorage";
+import { LOCAL_STORAGE_KEY } from "../constants/key";
 
 const LoginPage = () => {
     const { values, errors, touched, getInputProps } = useForm<UserSigninInformation>({
@@ -12,10 +15,9 @@ const LoginPage = () => {
         validate : validateSignin,
     });
 
-    const handleSubmit = () => {
-    };
-    const [page, setPage] = useState(1);
-    const url = `http://localhost:5173`;
+    const handleSubmit = async() => {};
+
+    const [page, setPage] = useState(1)
     const isDisabled : boolean = Object.values(errors || {}).some((error : string) => error.length > 0) || Object.values(values).some((value : string) => value === "");
 
     return (
