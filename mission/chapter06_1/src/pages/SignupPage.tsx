@@ -64,7 +64,7 @@ const SignupPage = () => {
     };
 
     return (
-        <div className="flex flex-col items-center justify-center h-full gap-4 bg-black text-white">
+        <div className="flex flex-col items-center justify-center h-dvh gap-4 bg-black text-white">
             <div className="grid grid-cols-3 w-full max-w-md">
                 <button
                     className="text-white disabled:cursor-not-allowed"

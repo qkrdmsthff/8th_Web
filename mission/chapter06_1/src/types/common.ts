@@ -8,6 +8,7 @@ export type CommonResponse<T> = {
 }
 
 export type CursorBasedResponse<T> = {
+    items: any;
     status : boolean;
     statusCode : number;
     message : string;

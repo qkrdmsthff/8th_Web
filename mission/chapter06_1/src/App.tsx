@@ -11,6 +11,7 @@ import ProtectedLayout from './layouts/ProtectedLayout';
 import GoogleLoginRedirectPage from './pages/GoogleLoginRedirectPage';
 import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+import LpPage from './pages/LpPage';
 
 const publicRoutes : RouteObject[] = [
   {
@@ -37,11 +38,6 @@ const publicRoutes : RouteObject[] = [
         path : "v1/auth/google/callback",
         element : <GoogleLoginRedirectPage />
       },
-
-      {
-        path : "",
-        element : <GoogleLoginRedirectPage />
-      },
     ],
   }
 ];
@@ -55,6 +51,11 @@ const protectedRoutes : RouteObject[] = [
       {
       path : "my",
       element : <MyPage />,
+      },
+
+      {
+        path : "lp",
+        element : <LpPage />
       }
     ]
   }

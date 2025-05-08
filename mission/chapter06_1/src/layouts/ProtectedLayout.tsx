@@ -2,7 +2,6 @@ import { Navigate, Outlet, useLocation } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
 import Navbar from "../components/Navbar";
 import Footer from "../components/Footer";
-import Sidebar from "../components/Sidebar";
 
 const ProtectedLayout = () => {
     const { accessToken } = useAuth();
@@ -16,9 +15,8 @@ const ProtectedLayout = () => {
         <div className='h-dvh flex flex-col'>
             <Navbar />
 
-            <main className='flex-1 mt-10'>
+            <main className='flex-1 mt-17'>
                 <Outlet />
-                <Sidebar />
             </main>
 
             <Footer/>

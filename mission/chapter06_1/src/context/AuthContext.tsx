@@ -1,8 +1,8 @@
 
-import { createContext, PropsWithChildren, useCallback, useContext, useState } from 'react';
+import { createContext, PropsWithChildren, useCallback, useContext, useEffect, useState } from 'react';
 import { useLocalsStorage } from '../hooks/useLocalsStorage';
 import { LOCAL_STORAGE_KEY } from '../constants/key';
-import { postLogout, postSignin } from '../apis/auth';
+import { getMyInfo, postLogout, postSignin } from '../apis/auth';
 import { RequestSigninDto } from '../types/auth';
 import { axiosInstance } from '../apis/axios';
 import { useNavigate } from 'react-router-dom';
@@ -12,6 +12,7 @@ interface AuthContextType {
     refreshToken : string | null;
     login : (signInData : RequestSigninDto) => Promise<void>;
     logout : () => Promise<void>;
+    name : string | null;
 }
 
 export const AuthContext = createContext<AuthContextType> ({
@@ -19,6 +20,7 @@ export const AuthContext = createContext<AuthContextType> ({
     refreshToken : null,
     login : async() => {},
     logout : async() => {},
+    name : null,
 })
 
 export const AuthProvider = ({children} : PropsWithChildren) => {
@@ -42,6 +44,26 @@ export const AuthProvider = ({children} : PropsWithChildren) => {
         getRefreshTokenFromStorage(),
     );
 
+    const [name, setName] = useState<string | null>(null);
+
+    useEffect(() => {
+        const fetchUserInfo = async () => {
+            if (!accessToken) return;  
+
+            try {
+                const { data } = await getMyInfo();  
+                setName(data.name);
+            } 
+            
+            catch (error) {
+                console.error(error);
+                alert("!! 로그인이 필요한 서비스입니다  로그인을 해주세요 !!")
+            }
+        };
+
+        fetchUserInfo();
+    }, [accessToken]);
+
     const login = async (signinData : RequestSigninDto) => {
         try {
             const {data} = await postSignin(signinData);
@@ -49,12 +71,15 @@ export const AuthProvider = ({children} : PropsWithChildren) => {
             if (data) {
                 const newAccessToken : string = data.accessToken;
                 const newRefreshToken : string = data.refreshToken;
+                const userName : string = data.name;
 
                 setAccessTokenInStorage(newAccessToken);
                 setRefreshTokenInStorage(newRefreshToken);
 
                 setAccessToken(newAccessToken);
                 setRefreshToken(newRefreshToken);
+                setName(userName);
+
                 alert("로그인 성공");
                 window.location.href = "/my";
             }
@@ -86,7 +111,7 @@ export const AuthProvider = ({children} : PropsWithChildren) => {
     };
 
     return (
-        <AuthContext.Provider value = {{accessToken, refreshToken, login, logout}}>
+        <AuthContext.Provider value = {{accessToken, refreshToken, login, logout, name}}>
             {children}
         </AuthContext.Provider>
     );
