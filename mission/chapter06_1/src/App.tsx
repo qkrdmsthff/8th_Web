@@ -1,6 +1,5 @@
 import './App.css'
 import {createBrowserRouter, RouteObject, RouterProvider} from "react-router-dom";
-import HomePage from './pages/HomePage';
 import NotFoundPage from './pages/NotFoundPage';
 import LoginPage from './pages/LoginPage';
 import HomeLayout from './layouts/HomeLayout';
@@ -12,6 +11,8 @@ import GoogleLoginRedirectPage from './pages/GoogleLoginRedirectPage';
 import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import LpPage from './pages/LpPage';
+import HomePage from './pages/HomePage';
+import LpDetailPage from './pages/LpDetailPage';
 
 const publicRoutes : RouteObject[] = [
   {
@@ -56,6 +57,11 @@ const protectedRoutes : RouteObject[] = [
       {
         path : "lp",
         element : <LpPage />
+      },
+
+      {
+        path : "/lp/:LPid",
+        element : <LpDetailPage /> 
       }
     ]
   }

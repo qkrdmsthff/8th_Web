@@ -1,4 +1,4 @@
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import { useState } from 'react';
 
@@ -6,6 +6,13 @@ const Navbar = () => {
   const { accessToken, name } = useAuth();
   const [isOpen, setIsOpen] = useState(false);
   const toggleSidebar = () => setIsOpen(!isOpen);
+  const navigate = useNavigate();
+    const { logout } = useAuth();
+
+  const handleLogout = async () => {
+    await logout();
+    navigate("/");
+  }
 
   return (
     <>
@@ -32,7 +39,11 @@ const Navbar = () => {
               <>
                 <Link to="/my" className='text-gray-700 dark:text-gray-300 hover:text-blue-500'> {name} 님 반갑습니다 </Link>
                 <Link to="/lp" className='text-gray-700 dark:text-gray-300 hover:text-blue-500'> 내 LP </Link>
-                <Link to="/" className='text-gray-700 dark:text-gray-300 hover:text-blue-500'> 로그아웃 </Link>
+                <button 
+                  className ='text-gray-700 dark:text-gray-300 hover:text-blue-500' 
+                  onClick={handleLogout}> 
+                    로그아웃 
+                </button>
               </>
             )}
 
@@ -61,11 +72,16 @@ const Navbar = () => {
           isOpen ? 'translate-x-0' : '-translate-x-full'
         }`}
       >
-        <div className="p-4 flex flex-col space-y-4">
+        <div className="p-4 flex flex-col space-y-4 items-center">
           {accessToken && (
             <>
-              <Link to="/my" className='text-gray-700 dark:text-gray-300 hover:text-blue-500'> {name}님 반갑습니다 </Link>
-              <Link to="/" className='text-gray-700 dark:text-gray-300 hover:text-blue-500'> 로그아웃 </Link>
+              <Link to="/my" className='text-gray-700 dark:text-gray-300 hover:text-blue-500'> -ˋˏ  {name}님 반갑습니다 ˎˊ- </Link>
+              <Link to="/lp" className='text-gray-700 dark:text-gray-300 hover:text-blue-500'> 내 LP </Link>
+              <button 
+                className ='margin-left text-gray-700 dark:text-gray-300 hover:text-blue-500' 
+                onClick={handleLogout}> 
+                  로그아웃 
+              </button>
             </>
           )}
 

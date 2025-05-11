@@ -3,11 +3,9 @@ import { PaginationDto } from '../../types/common';
 import { getLpList } from '../../apis/lp';
 import { QUERY_KEY } from '../../constants/key';
 
-function useGetLpList(params: PaginationDto) {
-    const { cursor, search, order, limit } = params;
-
+function useGetLpList({ cursor, search, order, limit }: PaginationDto) {
     return useQuery({
-        queryKey: [QUERY_KEY.lps, search || '', order || 'recent', cursor || null],
+        queryKey: [QUERY_KEY.lps, search, order],
         queryFn: () => getLpList({
             cursor,
             search,
