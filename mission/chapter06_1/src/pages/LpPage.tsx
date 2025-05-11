@@ -1,49 +1,30 @@
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { getLpList } from '../apis/lp';
+import { useInView } from 'react-intersection-observer';
 import { Lp } from '../types/lp';
+import useGetInfiniteLpList from '../hooks/queries/useGetInfiniteLpList';
+import { PAGINATION_ORDER } from '../enums/common';
+import LpCardSkeletonList from '../components/LpCard/LpCardSkeletonList';
 
 const LpPage = () => {
     const [order, setOrder] = useState<'recent' | 'oldest'>('recent');
-    const [lpList, setLpList] = useState<Lp[]>([]);
-    const [isLoading, setLoading] = useState(true);
-    const [isError, setIsError] = useState(false);
-    const [isModalOpen, setIsModalOpen] = useState(false); // 모달 상태
+    const [isModalOpen, setIsModalOpen] = useState(false); 
     const navigate = useNavigate();
 
+    const { ref, inView } = useInView();
+    const { data, isFetching, fetchNextPage, hasNextPage, isPending, isError } =
+        useGetInfiniteLpList(5, '', order === 'recent' ? PAGINATION_ORDER.asc : PAGINATION_ORDER.desc);
+
     useEffect(() => {
-        const fetchData = async () => {
-            const queryOrder = order === 'recent' ? 'asc' : 'desc';
-
-            try {
-                const response = await getLpList({
-                    cursor: 0,
-                    order: queryOrder,
-                    limit: 10,
-                });
-
-                if (response.data && response.data.data) {
-                    setLpList(response.data.data);
-                } else {
-                    console.log('No data found in response');
-                }
-
-                setIsError(false);
-            } catch (error) {
-                console.error('LP 목록 조회 실패:', error);
-                setIsError(true);
-            } finally {
-                setLoading(false);
-            }
-        };
-
-        fetchData();
-    }, [order]);
+        if (inView && hasNextPage && !isFetching) {
+            fetchNextPage();
+        }
+    }, [inView, hasNextPage, isFetching]);
 
     const handleLpClick = (lpId: number) => {
         const token = localStorage.getItem('accessToken');
         if (!token) {
-            setIsModalOpen(true); // 모달 열기
+            setIsModalOpen(true); 
         } else {
             navigate(`/lp/${lpId}`);
         }
@@ -51,11 +32,13 @@ const LpPage = () => {
 
     const handleLoginRedirect = () => {
         navigate('/login');
-        setIsModalOpen(false); // 모달 닫기
+        setIsModalOpen(false); 
     };
 
-    if (isLoading) return <p>로딩 중...</p>;
+    if (isPending) return <LpCardSkeletonList count={300} />;
     if (isError) return <div className="mt-20 text-center">조회된 LP가 없습니다.</div>;
+
+    const lpList = data?.pages.flatMap((page) => page.data.data) || [];
 
     return (
         <div className="flex flex-col h-dvh bg-white items-center text-black">
@@ -77,7 +60,7 @@ const LpPage = () => {
                 </button>
             </div>
 
-            <ul className="grid grid-cols-5 gap-4 mt-6">
+            <ul className="grid grid-cols-5 gap-4 mt-6 px-4">
                 {lpList.map((lp) => (
                     <li
                         key={lp.id}
@@ -89,7 +72,6 @@ const LpPage = () => {
                             alt={lp.title}
                             className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-100"
                         />
-
                         <div className="absolute inset-0 bg-black bg-opacity-60 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex flex-col justify-end p-4">
                             <h3 className="text-white text-lg font-semibold">{lp.title}</h3>
                             <p className="text-gray-300 text-sm">
@@ -100,7 +82,10 @@ const LpPage = () => {
                 ))}
             </ul>
 
-            {/* 로그인 모달 */}
+            {isFetching && <LpCardSkeletonList count={300} />}
+
+            <div ref={ref} className="h-4" />
+
             {isModalOpen && (
                 <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center">
                     <div className="bg-white p-6 rounded-lg text-center">

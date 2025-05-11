@@ -8,7 +8,7 @@ import LpCard from "../components/LpCard/LpCard";
 
 const HomePage = () => {
     const {ref, inView } = useInView();
-    const [ search, setSearch ] = useState("매튜");
+    const [ search, setSearch ] = useState("");
     const {data : lps, isFetching, hasNextPage, isPending, fetchNextPage, isError} = 
     useGetInfiniteLpList(10, search, PAGINATION_ORDER.asc);
 
@@ -33,15 +33,13 @@ const HomePage = () => {
         <div className="container mx-auto px-4 py-6">
             <input value={search} onChange={(e) => setSearch(e.target.value)}/>
 
-            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grisd-cols-4 gap-4"> 
+            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4"> 
                 {lps?.pages
                 ?.map((page) => page.data.data)
                 ?.flat()
                 ?.map((lp : Lp) => <LpCard key = {lp.id} lp = {lp}/>)}
-                {isFetching && 
-                <div ref = {ref} className="h-2">
-                    (<LpCardSkeletonList count = {5} />)
-                </div>}
+                {isFetching && <LpCardSkeletonList count={5} />}
+                <div ref={ref} className="h-4" />
             </div>
         </div>
     )

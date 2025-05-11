@@ -15,7 +15,7 @@ const ProtectedLayout = () => {
         <div className='h-dvh flex flex-col'>
             <Navbar />
 
-            <main className='flex-1 mt-17'>
+            <main className='overflow-auto flex-1 mt-17'>
                 <Outlet />
             </main>
 
