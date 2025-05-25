@@ -18,6 +18,8 @@ const MyPage = () => {
         try {
             const response = await getMyInfo(accessToken || '');
             setData(response);
+
+            console.log(accessToken);
         } catch (error) {
             alert('로그인 후 다시 실행해 주세요');
             navigate('/');

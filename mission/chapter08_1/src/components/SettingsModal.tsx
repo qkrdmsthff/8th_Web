@@ -21,8 +21,6 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({
     const [bio, setBio] = useState(initialBio);
     const [avatarFile, setAvatarFile] = useState<File | null>(null);
     const [previewUrl, setPreviewUrl] = useState(initialAvatar);
-    const [showModal, setShowModal] = useState(false);
-    const { mutate: deleteAccount } = useDeleteAccount();
 
     const modalRef = useRef<HTMLDivElement>(null);
 

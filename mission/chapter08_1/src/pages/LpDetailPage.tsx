@@ -3,12 +3,10 @@ import { useParams, useNavigate } from 'react-router-dom';
 import {
     getLpComments,
     postLpComment,
-    updateCommentAPI,
-    deleteCommentAPI,
     getLpDetail,
     deleteLp,
     likeLp,
-    updateLp, // 추가
+    updateLp,
 } from '../apis/lp';
 import { Lp } from '../types/lp';
 import { Pencil, Trash } from 'lucide-react';
@@ -20,18 +18,20 @@ import { Comment as LpCommentType } from '../types/comment';
 const LpDetailPage = () => {
     const { LPid } = useParams<{ LPid: string }>();
     const { name } = useAuth();
+    const navigate = useNavigate();
+
     const [lpDetails, setLpDetails] = useState<Lp | null>(null);
     const [isLoading, setIsLoading] = useState(true);
     const [isError, setIsError] = useState(false);
     const [comments, setComments] = useState<LpCommentType[]>([]);
     const [isCommentLoading, setIsCommentLoading] = useState(true);
     const [isCommentError, setIsCommentError] = useState(false);
-    const [newComment, setNewComment] = useState('');
     const [likeCount, setLikeCount] = useState(0);
     const [isEditing, setIsEditing] = useState(false);
     const [editTitle, setEditTitle] = useState('');
     const [editContent, setEditContent] = useState('');
-    const navigate = useNavigate();
+    const [newComment, setNewComment] = useState('');
+    const [submittedComment, setSubmittedComment] = useState('');
 
     useEffect(() => {
         if (!LPid) return;
@@ -65,9 +65,7 @@ const LpDetailPage = () => {
         fetchComments();
     }, [LPid]);
 
-    const handleBackClick = () => {
-        navigate('/lp');
-    };
+    const handleBackClick = () => navigate('/lp');
 
     const handleCommentSubmit = async () => {
         if (!newComment.trim() || !LPid) return;
@@ -100,10 +98,7 @@ const LpDetailPage = () => {
     const handleEditLp = async () => {
         if (!LPid) return;
         try {
-            await updateLp(Number(LPid), {
-                title: editTitle,
-                content: editContent,
-            });
+            await updateLp(Number(LPid), { title: editTitle, content: editContent });
             const updatedDetail = await getLpDetail(Number(LPid));
             setLpDetails(updatedDetail);
             setIsEditing(false);
@@ -121,11 +116,12 @@ const LpDetailPage = () => {
         } catch {}
     };
 
-    if (isLoading) return <p className="text-white text-center mt-10"> Loading !!! </p>;
-    if (isError) return <div className="text-white text-center mt-20"> Error !!! </div>;
+    if (isLoading) return <p className="text-white text-center mt-10">Loading !!!</p>;
+    if (isError) return <div className="text-white text-center mt-20">Error !!!</div>;
 
     return (
         <div className="overflow-visible min-h-screen bg-black text-white flex flex-col items-center py-10 px-4">
+
             <div className="w-full max-w-2xl bg-[#1e1e1e] rounded-xl p-6 relative">
                 <div className="flex justify-between items-start mb-4">
                     <div className="flex items-center gap-2">
@@ -145,49 +141,54 @@ const LpDetailPage = () => {
                         <Trash size={16} className="cursor-pointer hover:text-white" onClick={handleDeleteLp} />
                     </div>
                 </div>
+
+                
                 {isEditing ? (
-                    <>
-                        <input
-                            value={editTitle}
-                            onChange={(e) => setEditTitle(e.target.value)}
-                            className="w-full mb-4 p-2 rounded bg-black text-white border border-gray-600"
-                            placeholder="제목 수정"
-                        />
-                        <textarea
-                            value={editContent}
-                            onChange={(e) => setEditContent(e.target.value)}
-                            className="w-full mb-4 p-2 rounded bg-black text-white border border-gray-600"
-                            placeholder="내용 수정"
-                            rows={4}
-                        />
-                        <div className="flex gap-2">
-                            <button onClick={handleEditLp} className="px-4 py-2 bg-green-600 text-white rounded">
-                                저장
-                            </button>
-                            <button
-                                onClick={() => setIsEditing(false)}
-                                className="px-4 py-2 bg-gray-600 text-white rounded"
-                            >
-                                취소
-                            </button>
-                        </div>
-                    </>
-                ) : (
-                    <>
-                        <h1 className="text-xl text-white font-semibold mb-6">{lpDetails?.title}</h1>
-                        <div className="w-full flex justify-center mb-6">
-                            <div className="relative w-72 h-72 text-white rounded-full overflow-hidden shadow-lg">
-                                <img
-                                    src={lpDetails?.thumbnail}
-                                    alt={lpDetails?.title}
-                                    className="w-full h-full object-cover"
-                                />
-                                <div className="absolute top-1/2 left-1/2 w-8 h-8 bg-white rounded-full transform -translate-x-1/2 -translate-y-1/2" />
+                        <>
+                            <h1>{lpDetails?.title}</h1>
+
+                            <input
+                                value={editTitle}
+                                onChange={(e) => setEditTitle(e.target.value)}
+                                className="w-full mb-4 p-2 rounded bg-black text-white border border-gray-600"
+                                placeholder="제목 수정"
+                            />
+                            <textarea
+                                value={editContent}
+                                onChange={(e) => setEditContent(e.target.value)}
+                                className="w-full mb-4 p-2 rounded bg-black text-white border border-gray-600"
+                                placeholder="내용 수정"
+                                rows={4}
+                            />
+                            <div className="flex gap-2">
+                                <button onClick={handleEditLp} className="px-4 py-2 bg-green-600 text-white rounded">
+                                    저장
+                                </button>
+                                <button
+                                    onClick={() => setIsEditing(false)}
+                                    className="px-4 py-2 bg-gray-600 text-white rounded"
+                                >
+                                    취소
+                                </button>
                             </div>
-                        </div>
-                        <p className="text-sm text-gray-300 mb-6 text-center">{lpDetails?.content}</p>
-                    </>
-                )}
+                        </>
+                    ) : (
+                        <>
+                            <h1 className="text-xl text-white font-semibold mb-6">{lpDetails?.title}</h1>
+                            <div className="w-full flex justify-center mb-6">
+                                <div className="relative w-72 h-72 text-white rounded-full overflow-hidden shadow-lg">
+                                    <img
+                                        src={lpDetails?.thumbnail}
+                                        alt={lpDetails?.title}
+                                        className="w-full h-full object-cover"
+                                    />
+                                </div>
+                            </div>
+                            <p className="text-sm text-gray-300 mb-6 text-center">{lpDetails?.content}</p>
+                        </>
+                    )
+                    } 
+
                 <div className="flex flex-wrap justify-center gap-2 mb-6">
                     {lpDetails?.tags.map((tag) => (
                         <span key={tag.id} className="bg-gray-700 text-xs px-3 py-1 rounded-full">
@@ -195,20 +196,21 @@ const LpDetailPage = () => {
                         </span>
                     ))}
                 </div>
-                <div
-                    className="flex justify-center items-center text-pink-500 text-lg cursor-pointer"
-                    onClick={handleLike}
-                >
+
+                <div className="flex justify-center items-center text-pink-500 text-lg cursor-pointer" onClick={handleLike}>
                     ❤️ <span className="ml-1 text-white text-sm">{likeCount}</span>
                 </div>
             </div>
+
             {name && <div className="mt-4 text-sm text-gray-400">{name}님, 반갑습니다.</div>}
+
             <button
                 onClick={handleBackClick}
                 className="mt-6 px-4 py-2 bg-gray-800 text-white rounded hover:bg-gray-700"
             >
                 목록으로 돌아가기
             </button>
+
             <div className="w-full max-w-2xl mt-10">
                 <textarea
                     value={newComment}
@@ -224,6 +226,7 @@ const LpDetailPage = () => {
                     댓글 작성
                 </button>
             </div>
+
             <div className="w-full max-w-2xl mt-8 space-y-4">
                 {isCommentLoading ? (
                     <LpCardSkeletonList count={3} />

@@ -5,18 +5,19 @@ import useGetInfiniteLpList from '../hooks/queries/useGetInfiniteLpList';
 import { PAGINATION_ORDER } from '../enums/common';
 import LpCardSkeletonList from '../components/LpCard/LpCardSkeletonList';
 import LpCreateModal from '../components/LpCreateModal';
+import useThrottle from '../hooks/useThrottle';
 
 const LpPage = () => {
     const [order, setOrder] = useState<'recent' | 'oldest'>('recent');
-    const [searchInput, setSearchInput] = useState(''); // 사용자가 입력 중인 값
-    const [searchTerm, setSearchTerm] = useState('');   // 실제 검색 요청용 키워드
+    const [searchInput, setSearchInput] = useState(''); 
+    const [searchTerm, setSearchTerm] = useState('');   
 
     const [isModalOpen, setIsModalOpen] = useState(false);
     const openModal = () => setIsModalOpen(true);
     const closeModal = () => setIsModalOpen(false);
     const navigate = useNavigate();
-
     const { ref, inView } = useInView();
+    const throttledInView = useThrottle(inView, 3000); 
 
     const {
         data,
@@ -27,15 +28,16 @@ const LpPage = () => {
         isError
     } = useGetInfiniteLpList(
         5,
-        searchTerm, // ✅ 실제 검색어만 API에 사용
+        searchTerm,
         order === 'recent' ? PAGINATION_ORDER.asc : PAGINATION_ORDER.desc
     );
 
     useEffect(() => {
-        if (inView && hasNextPage && !isFetching) {
+        if (throttledInView && hasNextPage && !isFetching) {
+            console.log('throttled fetchNextPage triggered');
             fetchNextPage();
         }
-    }, [inView, hasNextPage, isFetching]);
+    }, [throttledInView, hasNextPage, isFetching]);
 
     const handleLpClick = (lpId: number) => {
         const token = localStorage.getItem('accessToken');
@@ -51,7 +53,6 @@ const LpPage = () => {
         setIsModalOpen(false);
     };
 
-    // ✅ Enter 키로 검색 실행
     const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
         if (e.key === 'Enter') {
             setSearchTerm(searchInput.trim());

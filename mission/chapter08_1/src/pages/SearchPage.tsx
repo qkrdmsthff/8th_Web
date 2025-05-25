@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { useDebounce } from '../hooks/useDebounce';
+import useDebounce from '../hooks/useDebounce';
 
 const mockData = [
     'ABBA', 'Adele', 'Aerosmith', 'Arctic Monkeys', 'Beyoncé',
