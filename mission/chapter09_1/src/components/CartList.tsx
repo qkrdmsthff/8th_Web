@@ -1,8 +1,9 @@
+import { useCartActions, useCartInfo } from "../hooks/useCartStore";
 import { useSelector } from "../hooks/useCustomRedux";
 import CartItem from "./CartItem"
 
 const CartList = () => {
-    const { cartItems } = useSelector((state) => state.cart);
+    const { cartItems } = useCartInfo();
 
     return (
         <div 
