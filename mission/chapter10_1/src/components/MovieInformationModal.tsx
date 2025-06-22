@@ -6,20 +6,23 @@ interface MovieInformationModalProps {
 }
 
 const MovieInformationModal = ({movie, onClose} : MovieInformationModalProps) => {
+    const imageBaseUrl = "https://image.tmdb.org/t/p/w500";
+    const fallbackImageImage = "http://via.placeholder.com/640x480";
+
     return (
         <div className="fixed inset-0 z-130 bg-opacity-70 bg-black flex items-center justify-center">
-            <div className="bg-white rounded-xl max-w-3xl w-full p-6 relative">
+            <div className="bg-white rounded-xl max-w-4xl w-full p-6 relative">
                 <button className="absolute top-4 right-4 text-xl" onClick={onClose}> ✕ </button>
 
                 <div className="grid grid-rows-[auto_1fr] h-[90vh] max-w-10xl w-full bg-white rounded-lg overflow-hidden">
-                    <div className="relative bg-cover bg-center h-64" style={{ backgroundImage: `url(${movie.backdrop_path})` }}>
-                        <div className="absolute inset-0 bg-black bg-opacity-50 flex flex-col justify-end p-6 text-white">
+                    <div className="relative bg-cover bg-center h-64 bg-opacity-50" style={{backgroundImage: `url(${movie.backdrop_path ? `${imageBaseUrl}${movie.backdrop_path}` : fallbackImageImage})`, }}>
+                        <div className="absolute inset-0 bg-opacity-50 flex flex-col justify-end p-6 text-white">
                             <h2 className="text-2xl font-bold"> {movie.title} </h2>
                             <p className="text-sm opacity-80"> {movie.original_title} </p>
                         </div>
                     </div>
 
-                    <div className="flex gap-4">
+                    <div className="flex gap-4 pt-2">
                         <img
                             src={`https://image.tmdb.org/t/p/w300${movie.poster_path}`}
                             alt={movie.title}
@@ -27,7 +30,7 @@ const MovieInformationModal = ({movie, onClose} : MovieInformationModalProps) =>
                         />
 
                         <div className="flex flex-col gap-2 items-center justify-center">
-                            <div className="absolute right-100 top-72 rounded-md px-2 py-1"> 
+                            <div className="absolute right-133 top-72 rounded-md px-2 py-1"> 
                                 <p className="text-md font-bold text-blue-500">
                                     {movie.vote_average}
                                 </p>
